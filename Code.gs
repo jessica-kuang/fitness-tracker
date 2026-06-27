@@ -208,7 +208,9 @@ function handleLogEdit(sheet, row) {
   } else {
     sheet.getRange(row, 2, 1, 4).setValue('Error');
   }
-  sheet.getRange(row, 6).setValue(new Date());
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  sheet.getRange(row, 6).setValue(today);
   sheet.getRange(row, 6).setNumberFormat('yyyy-mm-dd');
 }
 
