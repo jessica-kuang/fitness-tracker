@@ -26,7 +26,7 @@ function onOpen() {
     .createMenu('Fitness Tracker')
     .addItem('Run Setup', 'setupSpreadsheet')
     .addItem('Set Claude API Key', 'promptForApiKey')
-    .addToMenu();
+    .addToUi();
 }
 
 function promptForApiKey() {
