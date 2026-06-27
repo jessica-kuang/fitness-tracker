@@ -49,7 +49,19 @@ function setupSpreadsheet() {
   setupWeightTab(ss);
   setupWorkoutTab(ss);
   setupDashboardTab(ss);
+  setupInstallableTrigger(ss);
   ss.toast('Fitness Tracker setup complete!');
+}
+
+function setupInstallableTrigger(ss) {
+  const triggers = ScriptApp.getProjectTriggers();
+  const exists = triggers.some(t => t.getHandlerFunction() === 'handleSheetEdit');
+  if (!exists) {
+    ScriptApp.newTrigger('handleSheetEdit')
+      .forSpreadsheet(ss)
+      .onEdit()
+      .create();
+  }
 }
 
 function getOrCreateSheet(ss, name) {
@@ -170,8 +182,11 @@ function buildWeightChart(ss, dashboardSheet) {
 }
 
 // ---------------- onEdit triggers ----------------
+// NOTE: this must run as an INSTALLABLE trigger (Triggers > Add Trigger > handleSheetEdit > On edit),
+// not a simple onEdit(e) trigger — simple triggers run in a restricted sandbox that blocks
+// UrlFetchApp.fetch (the Claude API call) regardless of granted OAuth scopes.
 
-function onEdit(e) {
+function handleSheetEdit(e) {
   const sheet = e.range.getSheet();
   const name = sheet.getName();
 
